@@ -15,7 +15,7 @@ public class HelloGit {
 		System.out.println(333);
 		System.out.println("이제 github repo에서 관리한다아!!!!");
 		System.out.println("원격 저장소에서 작성!!!");
-
+		System.out.println("한번에 땡겨주세요!!!");
 	}
 
 }
