@@ -13,6 +13,7 @@ public class HelloGit {
 	public void merge() {
 		System.out.println(2);
 		System.out.println(333);
+		System.out.println("이제 github repo에서 관리한다아!!!!");
 
 	}
 
