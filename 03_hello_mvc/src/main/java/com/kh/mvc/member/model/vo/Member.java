@@ -48,6 +48,7 @@ public class Member implements Serializable,HttpSessionBindingListener{
 		this.address = address;
 		this.enrollDate = enrollDate;
 	}
+
 	public String getMemberId() {
 		return memberId;
 	}

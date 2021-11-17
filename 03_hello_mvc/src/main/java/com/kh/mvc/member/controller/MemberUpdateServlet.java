@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kh.mvc.common.MvcUtils;
 import com.kh.mvc.member.model.service.MemberService;
 import com.kh.mvc.member.model.vo.Member;
 
@@ -30,7 +31,6 @@ public class MemberUpdateServlet extends HttpServlet {
 				
 				// 2.사용자입력값 처리 사용자입력값 -> Member VO객체 생성
 				String memberId = request.getParameter("memberId");
-				String password = request.getParameter("password");
 				String memberName = request.getParameter("memberName");
 				String _birthday = request.getParameter("birthday"); 
 				String gender = request.getParameter("gender");
@@ -48,7 +48,7 @@ public class MemberUpdateServlet extends HttpServlet {
 					hobby = String.join(",", _hobby);
 				
 				Member member = 
-						new Member(memberId, password, memberName, null, gender, birthday, email, phone, address, hobby, null);
+						new Member(memberId, null, memberName, null, gender, birthday, email, phone, address, hobby, null);
 				System.out.println("member@servlet = " + member);
 				
 				// 3.업무로직 요청 : 서비스객체의 updateMember호출 & Member객체 전달

@@ -1,6 +1,5 @@
 @CHARSET "UTF-8";
 div, section, header, aside, footer {padding:10px;}
-
 /********** 전체컨테이너 **********/
 div#container	{background-color:#F0F0F0; width:960px; margin:0 auto;}
 

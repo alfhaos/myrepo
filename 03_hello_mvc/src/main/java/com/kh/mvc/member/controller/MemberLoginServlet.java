@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kh.mvc.common.MvcUtils;
 import com.kh.mvc.member.model.service.MemberService;
 import com.kh.mvc.member.model.vo.Member;
 
@@ -57,6 +58,7 @@ public class MemberLoginServlet extends HttpServlet {
 		// 세션 생성시각
 		//System.out.println(new Date(session.getCreationTime()));
 		// 로그인 성공여부
+		
 		if (member != null && password.equals(member.getPassword())) {
 			
 			
@@ -99,7 +101,9 @@ public class MemberLoginServlet extends HttpServlet {
 		// 4. 응답처리 jsp 위임
 		// redirect 요청주소를 변경, 새로고침을 통한 오류를 방지
 		// location은 브라우저가 새로 요청할 주소 
-		String location = request.getContextPath() + "/";
+		//String location = request.getContextPath() + "/";
+		String location = request.getHeader("Referer");
+		System.out.println("[MemberLoginServlet] location = " + location);
 		response.sendRedirect(location);
 	
 	}

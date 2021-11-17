@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,11 +37,26 @@ public class MemberDelete extends HttpServlet {
 		
 		// 4. 리다이렉트 하기
 		HttpSession session = request.getSession();
-		session.setAttribute("msg", msg);
+		if(result > 0) {
+			session.removeAttribute("loginMember");
+			session.setAttribute("msg", msg);
+			
+	//		String location = request.getContextPath() + "/member/logout";
+	//		response.sendRedirect(location);
+			
+			//saveId cookie 제거
+			Cookie c = new Cookie("saveId",memberId);
+			c.setPath(request.getContextPath());
+			c.setMaxAge(0);	// 쿠키의 유효기간 0 => 삭제
+			response.addCookie(c);
+		}
+		else {
+			session.setAttribute("msg","회원정보 삭제에 실패했습니다.");
+		}
+		response.sendRedirect(request.getContextPath() + "/");
 		
-		String location = request.getContextPath() + "/member/logout";
-		response.sendRedirect(location);
-	
+		
+		
 		
 		
 		

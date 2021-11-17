@@ -5,6 +5,7 @@
 
 <section id=enroll-container>
 	<h2>회원 정보</h2>
+	
 	<form id="memberUpdateFrm" method="post">
 		<table>
 			<tr>
@@ -13,18 +14,7 @@
 					<input type="text" name="memberId" id="memberId" value="<%= loginMember.getMemberId() %>" readonly>
 				</td>
 			</tr>
-			<tr>
-				<th>패스워드</th>
-				<td>
-					<input type="password" name="password" id="password" value="<%= loginMember.getPassword() %>" required>
-				</td>
-			</tr>
-			<tr>
-				<th>패스워드확인</th>
-				<td>	
-					<input type="password" id="passwordCheck" value="<%= loginMember.getPassword() %>" required><br>
-				</td>
-			</tr> 
+
 			<tr>
 				<th>이름</th>
 				<td>	
@@ -81,6 +71,7 @@
 			</tr>
 		</table>
         <input type="button" onclick="updateMember();" value="정보수정"/>
+        <input type="button" onclick = "location.href='<%= request.getContextPath() %>/member/updatePassword';" value="비밀번호변경"/>
         <input type="button" onclick="deleteMember();" value="탈퇴"/>
 	</form>
 </section>
@@ -108,6 +99,7 @@
  }
 
 
+
 /**
  * name = memberEnrollFrm 유효성검사
  * - id/비번 영문자/숫자 4글자 이상
@@ -117,18 +109,6 @@
  
  $(document.memberUpdateFrm).submit((e) => {
 
-		
-		//password
-		const $passoword = $(password);
-		const $passwordCheck = $(passwordCheck);
-		if(!/^[a-zA-Z0-9!@#$]{4,}$/.test($password.val())){
-			alert("유효한 패스워드를 입력하세요.");
-			return false;
-		}
-		if($password.val() != $passwordCheck.val()){
-			alert("패스워드가 일치하지 않습니다.");
-			return false;
-		}
 		
 		//memberName
 		const $memberName = $(memberName);
