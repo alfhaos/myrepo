@@ -128,7 +128,86 @@
 	</div>
 	
 	<script>
+	
+	
+	$(() => {
+		// 페이지 로딩시 어제날짜의 박스오피스 조회
+		const today = new Date();
+		const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+		console.log(yesterday);	
+		
+		// #targetDt 날짜 채우기 : yyyy-mm-dd
+		const value = `\${yesterday.getFullYear()}-\${f(yesterday.getMonth() + 1)}-\${f(yesterday.getDate())}`;
+		$(targetDt).val(value);
+		
+		
+		getDailyBoxOffice(yesterday);
+	});
+	
+	
 	$(targetDt).change((e) => {
+		const d = new Date($(e.target).val());
+		getDailyBoxOffice(d);
+	});
+
+	const f = n => n < 10 ? "0" + n : n;
+	
+	const getDailyBoxOffice = (d) => {
+		
+		const value = `\${d.getFullYear()}\${f(d.getMonth() + 1)}\${f(d.getDate())}`;
+		
+		$.ajax({
+			url: "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml",
+			data: {
+				key: "fa2ce7308ff7ef70205103ecc11b5d9c",
+				targetDt: value
+			},
+			success(data){
+				console.log(data);
+				const $dailyBoxOfficeList = $(data).find("dailyBoxOfficeList");
+				const $movies = $dailyBoxOfficeList.children();
+				
+				const $tbody = $(".boxoffice-container tbody").empty();
+				
+				$movies.each((i, movie) => {
+					const $movie = $(movie);
+					console.log($movie.prop("tagName")); // 태그명조회
+					const rank = $(movie).children("rank").text();
+					const movieNm = $(movie).children("movieNm").text();
+					let audiAcc = $(movie).children("audiAcc").text();
+					audiAcc = Math.floor((audiAcc / 10000) * 10) / 10; // 만단위 출력(소수점 첫번째자리까지)
+					console.log(rank, movieNm, audiAcc);
+					const tr = `<tr>
+						<td>\${rank}</td>
+						<td>\${movieNm}</td>
+						<td>\${audiAcc}만</td>
+					</tr>`;
+					
+					$tbody.append(tr);
+				});
+				
+			},
+			error: console.log
+		});
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<%--  내가 해본 부분
+	$(targetDt).change((e) => {
+		const d = new Date($(e.target).val());
+		getDailyBoxOffice(d);
+		
 		
 		const targetDt = $(e.target).val().replaceAll("-","");
 		
@@ -142,10 +221,10 @@
 			success(data){
 				console.log(data);
 				
-		
+			
 				const $list = $(data).find("dailyBoxOfficeList");
 				const $boxOfficeList = $list.children();
-				console.log($boxOfficeList);
+				
 				
 				const $tbody = $(".boxoffice-container table tbody");
 				$tbody.empty(); // 초기화
@@ -154,11 +233,12 @@
 				
 				
 				$boxOfficeList.each((i, movie) => {
+					const $movie = $(movie);
 					const mvTitle = $(movie).children("movieNm").text();
 					const rank = $(movie).children("rank").text();
 					let audiAcc = $(movie).children("audiAcc").text();
 					var acc = Math.floor(audiAcc / 10000) < 1 ? "0." + audiAcc % 10000 + "만" : Math.floor(audiAcc / 10000)  + "만" ;
-				
+					console.log($movie.prop("tagName"));
 			
 					// console.log(phone);
 
@@ -182,7 +262,7 @@
 			error: console.log
 			
 		});
-	});
+	});--%>
 	
 	</script>
 	
