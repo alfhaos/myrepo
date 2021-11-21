@@ -19,7 +19,7 @@
 		<li><a href="<%= request.getContextPath() %>/html.jsp">html</a></li>
 		<li><a href="<%= request.getContextPath() %>/csv.jsp">csv</a></li>
 		<li><a href="<%= request.getContextPath() %>/json.jsp">json</a></li>
-		<li><a href="<%= request.getContextPath() %>/.jsp">html</a></li>
+		<li><a href="<%= request.getContextPath() %>/smart.jsp">smart</a></li>
 	</ul>
 	<script>
 	/**
