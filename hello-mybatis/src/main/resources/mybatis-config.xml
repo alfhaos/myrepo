@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="/datasource.properties"/>
+	
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+	<!--  <typeAlias type="com.kh.mybatis.student.model.vo.Student" alias="student"/>  -->
+		<package name="com.kh"/>
+	</typeAliases>
+	
+	<environments default="development">
+		<environment id="development">
+		<transactionManager type="JDBC"/>
+		
+		<dataSource type="POOLED">
+			<property name="driver" value="${driverClass}"/>
+			<property name="url" value="${url}"/>
+			<property name="username" value="${user}"/>
+			<property name="password" value="${password}"/>
+		</dataSource>
+		
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="/mapper/student/student-mapper.xml"/>
+		<mapper resource="/mapper/emp/emp-mapper.xml"/>
+	</mappers>
+</configuration>

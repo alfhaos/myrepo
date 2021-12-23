@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+	<select id="selectEmpMapList" resultMap="empMap"> select * from kh.employee order by emp_id asc </select>
+	<!--  
+			${} : 식별자(홑따옴표 없이 전달한 값을 그대로 출력)
+			#{} : 값(타입별 형변환)
+		  -->
+	<select id="search1" resultMap="empMap"> select * from kh.employee where ${searchType} like '%' || #{searchKeyword} || '%' order by emp_id asc </select>
+	<!--  
+			if.test속성안에 and/or 대신 &&/|| 사용불가!
+			다음 부등호는 키워드 연산자로 대체해서 사용할것!
+			> gt
+			>= gte
+			< lt
+			<= lte 
+			
+			where
+				1. 하위의 if태그가 모두 실행되지 않는다면, where키워드 제거
+				2. where다음에 바로 나오는 and/or 제거 		
+		 -->
+	<select id="search2" resultMap="empMap">
+		select * from ( select kh.employee.*, decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender from kh.employee )
+		<where>
+			<if test="searchType != null and searchType != ''">
+			<if test="searchKeyword != null and searchKeyword != ''"> ${searchType} like '%' || #{searchKeyword} || '%' 
+				</if>
+			</if>
+			<if test="gender != null and gender != ''"> and gender = #{gender} </if>
+			<if test="salary != null and salary != ''">
+			<if test="salaryCompare != null and salaryCompre != ''">
+		<choose>
+			<when test="salaryCompare eq 'ge'">
+				and salary
+			<![CDATA[ >= ]]>
+				#{salary}
+			</when>
+		<when test="salaryCompare eq 'le'">
+			and salary
+		<![CDATA[ <= ]]>
+			#{salary}
+		</when>
+		</choose>
+		</if>
+	</if>
+	  	<if test="hireDate != null and hireDate != ''">
+		  		<if test="hiredateCompare != null and hiredateCompare != ''">
+		  			<choose>
+		  				<when test="hiredateCompare eq 'ge'">
+		  					and hire_date <![CDATA[ >= ]]> #{hireDate} 
+		  				</when>
+		  				<when test="hiredateCompare eq 'le'">
+		  					and hire_date <![CDATA[ <= ]]> #{hireDate} 
+		  				</when>
+		  			</choose>
+		  		</if>
+		  	</if>
+		</where>
+			order by emp_id asc
+	</select>
+	
+	
+	<resultMap type="map" id="empMap">
+	
+		<id column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="emp_no" property="empNo"/>
+		<result column="gender" property="gender"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="dept_title" property="deptTitle"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="job_name" property="jobName"/>
+		<result column="sal_level" property="salLevel"/>
+		<result column="salary" property="salary"/>
+		<result column="bonus" property="bonus"/>
+		<result column="manager_id" property="managerId"/>
+		<result column="hire_date" property="hireDate"/>
+		<result column="quit_yn" property="quitYn"/>
+	</resultMap>
+	
+	
+	<select id="selectJobList" resultType = "map">
+		select
+			job_code as "jobCode",
+			job_name as "jobName"
+		from
+			kh.job
+		order by
+			job_code asc
+			
+	</select>
+	
+	<select  id="search3" resultMap = "empMap">
+	select
+			*
+		from (
+			select
+				kh.employee.*,
+				(select job_name from kh.job where job_code = kh.employee.job_code) job_name,
+				(select dept_title from kh.department where dept_id = kh.employee.dept_code) dept_title,
+				decode(substr(emp_no,8,1), '1','남','3','남','여') gender
+			from
+				kh.employee
+              )
+               
+              <where>
+              	<if test="jobCode != null">
+              		job_code in
+              			<foreach collection="jobCode" item="jc" open ="(" separator="," close=")">
+              				#{jc}
+              			</foreach>
+              		
+              		
+              		
+              	
+              	</if>	
+              </where>
+	</select>
+	
+	
+	<select id="selectOneEmpMap" resultMap="empMap">
+		select 
+			*
+		from (
+			select
+				kh.employee.*,
+				(select job_name from kh.job where job_code = kh.employee.job_code) job_name,
+				(select dept_title from kh.department where dept_id = kh.employee.dept_code) dept_title,
+				decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender
+			from
+				kh.employee
+		) 
+		where
+			emp_id = #{empId}
+	</select>
+	
+	
+	<select id="selectDeptList" resultType="map"> select dept_id as "deptId" , dept_title as "deptTitle" from kh.department </select>
+	
+	
+	<!-- 
+		set
+			태그내부 마지막에 위치한 , 를 제거
+	 -->
+	<update id="updateEmp">
+	
+		update
+			kh.employee
+		<set>
+			
+			<if test="jobCode != null and jobCode != ''">
+
+				job_code = #{jobCode},
+			</if>
+			<if test="deptCode != null and deptCode != ''">
+				dept_code = #{deptCode}
+			</if>
+		</set>
+		where
+			emp_id = #{empId}
+		
+	</update>
+	
+</mapper>
